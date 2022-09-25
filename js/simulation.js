@@ -27,8 +27,14 @@ const Simulation = function(id) {
 
 Simulation.prototype.update = function() {
   this.time++;
-  this.cells.forEach((cell) => cell.update());
+  const light = this.getLight();
+  this.cells.forEach((cell) => cell.update(light));
 };
+
+// Calculate the light intensity based on the day/night cycle
+Simulation.prototype.getLight = function() {
+  return Math.max(0, Math.sin(this.time * 2 * Math.PI / 1000) + 0.1);
+}
 
 Simulation.prototype.display = function() {
   this.ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);

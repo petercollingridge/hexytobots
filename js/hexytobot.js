@@ -21,15 +21,19 @@ const Cell = function(x, y, angle, energy, storage) {
   ];
 };
 
-Cell.prototype.update = function() {
+Cell.prototype.update = function(light) {
+  // Gain enegy through photosynthesis
+  this.energy = Math.min(10, this.energy + light);
+  // Life slowly lost through degeneration
+  this.life -= 0.1;
   this.metabolism();
   this.move();
 };
 
 Cell.prototype.metabolism = function() {
   this.enzymes[0].update(0.5);
-  console.log(this.energy);
-  console.log(this.life);
+  console.log('energy', this.energy);
+  console.log('life', this.life);
 };
 
 Cell.prototype.move = function() {
