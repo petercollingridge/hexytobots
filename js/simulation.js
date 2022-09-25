@@ -18,19 +18,20 @@ const Simulation = function(id) {
 
   this.ctx = canvas.element.getContext('2d');
 
+  this.time = 0;
   this.cells = [
-    new Cell(200, 100, 0.2),
-    new Cell(250, 180, 0),
+    new Cell(200, 100, 0.2, 100, 0),
+    new Cell(250, 180, 0, 100, 0),
   ];
 };
 
 Simulation.prototype.update = function() {
+  this.time++;
   this.cells.forEach((cell) => cell.update());
 };
 
 Simulation.prototype.display = function() {
   this.ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
   this.cells.forEach((cell) => cell.display(this.ctx, CELL_SIZE));
 };
 

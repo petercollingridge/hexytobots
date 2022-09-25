@@ -1,13 +1,38 @@
-const Cell = function(x, y, angle, energy, genome) {
+const Cell = function(x, y, angle, energy, storage) {
   this.age = 0;
   this.x = x;
   this.y = y;
   this.angle = angle;
+  // this.genome = genome;
+
+  this.life = 100;
   this.energy = energy;
-  this.genome = genome;
+  this.storage = storage;
+  this.storage2 = 0;
+  this.child = 0;
+
+  this.enzymes = [
+    new Enzyme(this, 'energy', 'life'),
+    new Enzyme(this, 'energy', 'child'),
+    new Enzyme(this, 'energy', 'storage'),
+    new Enzyme(this, 'storage', 'energy'),
+    new Enzyme(this, 'storage', 'storage2'),
+    new Enzyme(this, 'storag2', 'storage'),
+  ];
 };
 
 Cell.prototype.update = function() {
+  this.metabolism();
+  this.move();
+};
+
+Cell.prototype.metabolism = function() {
+  this.enzymes[0].update(0.5);
+  console.log(this.energy);
+  console.log(this.life);
+};
+
+Cell.prototype.move = function() {
   this.x += (Math.random() - 0.5) * 5
   this.y += (Math.random() - 0.5) * 5
   this.angle += (Math.random() - 0.5) * 0.1
