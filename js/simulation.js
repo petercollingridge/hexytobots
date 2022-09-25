@@ -24,11 +24,33 @@ const Simulation = function(id) {
   ];
 };
 
+Simulation.prototype.update = function() {
+  this.cells.forEach((cell) => cell.update());
+};
+
 Simulation.prototype.display = function() {
   this.ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
   this.cells.forEach((cell) => cell.display(this.ctx, CELL_SIZE));
 };
 
+Simulation.prototype.setTimeout = function() {
+  this.update();
+  this.display();
+  this.animation = setTimeout(this.setTimeout.bind(this), 20);
+};
+
+Simulation.prototype.run = function() {
+  if (!this.animation) {
+      this.setTimeout();
+  }
+};
+
+Simulation.prototype.stop = function() {
+  clearTimeout(this.animation);
+  this.animation = false;
+};
+
 const sim = new Simulation('sim');
-sim.display();
+sim.run();
+sim.stop();

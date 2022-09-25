@@ -7,6 +7,12 @@ const Cell = function(x, y, angle, energy, genome) {
   this.genome = genome;
 };
 
+Cell.prototype.update = function() {
+  this.x += (Math.random() - 0.5) * 5
+  this.y += (Math.random() - 0.5) * 5
+  this.angle += (Math.random() - 0.5) * 0.1
+};
+
 // Draw organism as a hexagon
 Cell.prototype.display = function(ctx, size) {
   ctx.fillStyle = 'rgb(60, 100, 40)';
