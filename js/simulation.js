@@ -28,7 +28,7 @@ const Simulation = function(id) {
 Simulation.prototype.update = function() {
   this.time++;
   const light = this.getLight();
-  this.cells.forEach((cell) => cell.update(light));
+  callForEach(this.cells, 'update', light);
 };
 
 // Calculate the light intensity based on the day/night cycle
@@ -38,7 +38,7 @@ Simulation.prototype.getLight = function() {
 
 Simulation.prototype.display = function() {
   this.ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-  this.cells.forEach((cell) => cell.display(this.ctx, CELL_SIZE));
+  callForEach(this.cells, 'display', this.ctx, CELL_SIZE);
 };
 
 Simulation.prototype.setTimeout = function() {
