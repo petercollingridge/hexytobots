@@ -47,3 +47,5 @@ function createElement(tag) {
 }
 
 const sigmoid = (n) => 1 / (1 + Math.exp(-n));
+
+const callForEach = (arr, func) => arr.forEach((item) => item[func]());
