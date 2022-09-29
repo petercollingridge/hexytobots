@@ -45,3 +45,5 @@ function createElement(tag) {
 
   return obj;
 }
+
+const sigmoid = (n) => 1 / (1 + Math.exp(-n));

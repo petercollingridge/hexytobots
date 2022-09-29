@@ -20,8 +20,8 @@ const Simulation = function(id) {
 
   this.time = 0;
   this.cells = [
-    new Cell(200, 100, 0.2, 100, 0),
-    new Cell(250, 180, 0, 100, 0),
+    new Cell(200, 100, 0.2, 100, 100),
+    new Cell(250, 180, 0, 100, 100),
   ];
 };
 
@@ -42,7 +42,9 @@ Simulation.prototype.display = function() {
 };
 
 Simulation.prototype.setTimeout = function() {
-  this.update();
+  for (let i = 0; i < 5; i++) {
+    this.update();
+  }
   this.display();
   this.animation = setTimeout(this.setTimeout.bind(this), 20);
 };

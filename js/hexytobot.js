@@ -11,6 +11,16 @@ const Cell = function(x, y, angle, energy, storage) {
   this.storage2 = 0;
   this.child = 0;
 
+  this.inputs = [
+    new Input(() => 1),
+    new Input(() => this.light),
+    new Input(() => this.life / 100),
+    new Input(() => this.energy / 10),
+    new Input(() => this.storage / 1000),
+    new Input(() => this.storage2 / 1000),
+    new Input(() => this.child / 100),
+  ];
+
   this.enzymes = [
     new Enzyme(this, 'energy', 'life'),
     new Enzyme(this, 'energy', 'child'),
@@ -19,21 +29,53 @@ const Cell = function(x, y, angle, energy, storage) {
     new Enzyme(this, 'storage', 'storage2'),
     new Enzyme(this, 'storag2', 'storage'),
   ];
+
+  this.hiddenNodes = [];
+  for (let i = 0; i < 4; i++) {
+    this.hiddenNodes.push(new NeuralNetNode());
+  }
+
+  this.connections = [
+    // new Connection(this.inputs[0], this.hiddenNodes[0], 0.5),
+    // new Connection(this.inputs[1], this.hiddenNodes[0], 0.25),
+    // new Connection(this.inputs[2], this.hiddenNodes[1], 0.6),
+    // new Connection(this.hiddenNodes[0], this.hiddenNodes[1], 0.6),
+    new Connection(this.inputs[0], this.hiddenNodes[0], 0.5),
+    // new Connection(this.hiddenNodes[0], this.hiddenNodes[0], 1),
+  ];
 };
 
 Cell.prototype.update = function(light) {
+  // The deeper the cell, the less light it sees
+  // Light falls off with a squared relationship
+  const depth = this.y / 400;
+  this.light = light * (1 - depth * depth * 0.5);
+
   // Gain enegy through photosynthesis
-  this.energy = Math.min(10, this.energy + light);
+  this.energy = Math.min(10, this.energy + this.light);
+
   // Life slowly lost through degeneration
   this.life -= 0.1;
+
+  this.think();
   this.metabolism();
   this.move();
 };
 
+Cell.prototype.think = function() {
+  // Connection transmit signals between nodes
+  this.connections.forEach((cxn) => cxn.update());
+  // Get updated node values
+  this.inputs.forEach((input) => input.updateValue());
+  this.hiddenNodes.forEach((input) => input.updateValue());
+
+  console.log(this.hiddenNodes[0].value);
+}
+
 Cell.prototype.metabolism = function() {
   this.enzymes[0].update(0.5);
-  console.log('energy', this.energy);
-  console.log('life', this.life);
+  // console.log('energy', this.energy);
+  // console.log('life', this.life);
 };
 
 Cell.prototype.move = function() {
