@@ -49,3 +49,5 @@ function createElement(tag) {
 const sigmoid = (n) => 1 / (1 + Math.exp(-n));
 
 const callForEach = (arr, func, ...args) => arr.forEach((item) => item[func](...args));
+
+const randomN = (n) => Math.floor(n * Math.random());

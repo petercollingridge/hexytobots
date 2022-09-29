@@ -35,19 +35,28 @@ const Cell = function(x, y, angle, energy, storage) {
   for (let i = 0; i < 4; i++) {
     this.hiddenNodes.push(new NeuralNetNode());
   }
+  
+  this.connections = this._getConnections();
+};
+
+Cell.prototype._getConnections = function() {
+  const inputs = this.inputs.concat(this.hiddenNodes);
+  const outputs = this.enzymes.concat(this.hiddenNodes);
 
   // Create random connections
+  const n = randomN(6) + 6;
+  const nInputs = inputs.length;
+  const nOutputs = outputs.length;
   
-  this.connections = [
-    // new Connection(this.inputs[0], this.hiddenNodes[0], 0.5),
-    // new Connection(this.inputs[1], this.hiddenNodes[0], 0.25),
-    // new Connection(this.inputs[2], this.hiddenNodes[1], 0.6),
-    // new Connection(this.hiddenNodes[0], this.hiddenNodes[1], 0.6),
-    new Connection(this.inputs[0], this.hiddenNodes[0], 0.5),
-    new Connection(this.hiddenNodes[0], this.enzymes[0], 0.5),
-    // new Connection(this.hiddenNodes[0], this.hiddenNodes[0], 1),
-  ];
-};
+  const connections = [];
+  for (let i = 0; i < n; i++) {
+    const input = inputs[randomN(nInputs)]
+    const output = outputs[randomN(nOutputs)]
+    connections.push(new Connection(input, output, Math.random()));
+  }
+  
+  return connections;
+}
 
 Cell.prototype.update = function(light) {
   // The deeper the cell, the less light it sees
