@@ -33,7 +33,7 @@ Simulation.prototype.update = function() {
 
 // Calculate the light intensity based on the day/night cycle
 Simulation.prototype.getLight = function() {
-  return Math.max(0, Math.sin(this.time * 2 * Math.PI / 1000) + 0.1);
+  return Math.max(0, Math.sin(this.time * 2 * Math.PI / 1000) + 0.2) / 1.2;
 }
 
 Simulation.prototype.display = function() {
