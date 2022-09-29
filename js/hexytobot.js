@@ -27,20 +27,24 @@ const Cell = function(x, y, angle, energy, storage) {
     new Enzyme(this, 'energy', 'storage'),
     new Enzyme(this, 'storage', 'energy'),
     new Enzyme(this, 'storage', 'storage2'),
-    new Enzyme(this, 'storag2', 'storage'),
+    new Enzyme(this, 'storage2', 'storage'),
   ];
 
+  // Create n hidden nodes in the brain
   this.hiddenNodes = [];
   for (let i = 0; i < 4; i++) {
     this.hiddenNodes.push(new NeuralNetNode());
   }
 
+  // Create random connections
+  
   this.connections = [
     // new Connection(this.inputs[0], this.hiddenNodes[0], 0.5),
     // new Connection(this.inputs[1], this.hiddenNodes[0], 0.25),
     // new Connection(this.inputs[2], this.hiddenNodes[1], 0.6),
     // new Connection(this.hiddenNodes[0], this.hiddenNodes[1], 0.6),
     new Connection(this.inputs[0], this.hiddenNodes[0], 0.5),
+    new Connection(this.hiddenNodes[0], this.enzymes[0], 0.5),
     // new Connection(this.hiddenNodes[0], this.hiddenNodes[0], 1),
   ];
 };
@@ -63,17 +67,17 @@ Cell.prototype.update = function(light) {
 };
 
 Cell.prototype.think = function() {
-  // Connection transmit signals between nodes
-  this.connections.forEach((cxn) => cxn.update());
-  // Get updated node values
-  this.inputs.forEach((input) => input.updateValue());
-  this.hiddenNodes.forEach((input) => input.updateValue());
+  // Connections transmit signals between nodes
+  callForEach(this.connections, 'update');
 
-  console.log(this.hiddenNodes[0].value);
+  // Update neural net node values
+  callForEach(this.inputs, 'updateValue');
+  callForEach(this.hiddenNodes, 'updateValue');
+  callForEach(this.enzymes, 'updateValue');
 }
 
 Cell.prototype.metabolism = function() {
-  this.enzymes[0].update(0.5);
+  callForEach(this.enzymes, 'update');
   // console.log('energy', this.energy);
   // console.log('life', this.life);
 };
