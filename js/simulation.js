@@ -9,14 +9,7 @@ const Simulation = function(id) {
       return;
   }
 
-  const canvas = createElement('canvas')
-    .attr({
-      width: CANVAS_WIDTH,
-      height: CANVAS_HEIGHT
-    })
-    .addTo(container);
-
-  this.ctx = canvas.element.getContext('2d');
+  this.createInterface(container);
 
   this.time = 0;
   this.cells = [
@@ -24,6 +17,32 @@ const Simulation = function(id) {
     new Cell(250, 180, 0, 100, 100),
   ];
 };
+
+Simulation.prototype.createInterface = function(container) {
+  this.controls = createElement('div').addClass('sidebar').addTo(container);
+
+  // Play / Pause button
+  const runButton = this.controls.addElement('button').text('Run');
+  runButton.addEventListener('click', () => {
+      if (!this.animation) {
+          runButton.text('Pause');
+          this.run();
+      } else {
+          runButton.text('Run');
+          this.stop();
+      }
+  });
+
+  const canvas = createElement('canvas')
+    .attr({
+      width: CANVAS_WIDTH,
+      height: CANVAS_HEIGHT
+    })
+    .addClass('sim-canvas')
+    .addTo(container);
+
+  this.ctx = canvas.element.getContext('2d');
+}
 
 Simulation.prototype.update = function() {
   this.time++;

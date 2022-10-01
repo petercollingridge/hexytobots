@@ -1,3 +1,23 @@
-canvas {
+#sim {
+  display: grid;
+  width: 750px;
+  grid-template-columns: 150px 600px;
+  grid-template-rows: auto auto;
+  grid-template-areas: 
+  "header header"
+  "sidebar main";
   border: 1px solid #ddd;
+}
+
+.sidebar {
+  grid-area: sidebar;
+  padding: 2rem 1rem;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  border-right: 1px solid #ddd;
+}
+
+.sim-canvas {
+  grid-area: main;
 }
