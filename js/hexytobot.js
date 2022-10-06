@@ -59,7 +59,13 @@ Cell.prototype._getConnections = function() {
   return connections;
 }
 
-Cell.prototype.update = function(light) {
+Cell.prototype.update = function(world, light) {
+  // Equilibrate matter with the world
+  const gridCell = world.getGridCell(this.x, this.y);
+  const delta = (this.matter - gridCell.amount) * 0.02;
+  this.matter -= delta;
+  gridCell.amount += delta;
+
   // The deeper the cell, the less light it sees
   // Light falls off with a squared relationship
   const depth = this.y / 400;

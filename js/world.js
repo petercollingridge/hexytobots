@@ -1,6 +1,6 @@
 // A grid of metabolites
 
-function getWorld(width, height, initialAmount = 0) {
+function getWorld(width, height, size, initialAmount = 0) {
   const grid = [];
 
   for (let x = 0; x < width; x++) {
@@ -23,7 +23,7 @@ function getWorld(width, height, initialAmount = 0) {
     }
   }
 
-  function display(ctx, size) {
+  function display(ctx) {
     for (let x = 0; x < width; x++) {
       for (let y = 0; y < height; y++) {
         const value = grid[x][y].amount;
@@ -65,5 +65,9 @@ function getWorld(width, height, initialAmount = 0) {
     }
   }
 
-  return { grid, display, diffusion };
+  function getGridCell(x, y) {
+    return grid[Math.floor(x / size)][Math.floor(y / size)];
+  }
+
+  return { grid, display, diffusion, getGridCell };
 }
