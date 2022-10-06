@@ -1,5 +1,6 @@
 const CANVAS_WIDTH = 600;
 const CANVAS_HEIGHT = 400;
+const GRID_SIZE = 25;
 const CELL_SIZE = 10;
 
 const Simulation = function(id) {
@@ -13,9 +14,11 @@ const Simulation = function(id) {
 
   this.time = 0;
   this.cells = [
-    new Cell(200, 100, 0.2, 100, 100),
-    new Cell(250, 180, 0, 100, 100),
+    new Cell(200, 100, 0.2, 10, 10, 100),
+    new Cell(250, 180, 0, 10, 10, 100),
   ];
+
+  this.world = getWorld(CANVAS_WIDTH / GRID_SIZE, CANVAS_HEIGHT / GRID_SIZE);
 };
 
 Simulation.prototype.createInterface = function(container) {
@@ -46,6 +49,8 @@ Simulation.prototype.createInterface = function(container) {
 
 Simulation.prototype.update = function() {
   this.time++;
+  this.world.diffusion();
+
   const light = this.getLight();
   callForEach(this.cells, 'update', light);
 };
@@ -57,6 +62,7 @@ Simulation.prototype.getLight = function() {
 
 Simulation.prototype.display = function() {
   this.ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  this.world.display(this.ctx, GRID_SIZE);
   callForEach(this.cells, 'display', this.ctx, CELL_SIZE);
 };
 

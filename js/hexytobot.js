@@ -1,4 +1,4 @@
-const Cell = function(x, y, angle, energy, storage) {
+const Cell = function(x, y, angle, matter, energy, storage) {
   this.age = 0;
   this.x = x;
   this.y = y;
@@ -6,6 +6,7 @@ const Cell = function(x, y, angle, energy, storage) {
   // this.genome = genome;
 
   this.life = 100;
+  this.matter = matter;
   this.energy = energy;
   this.storage = storage;
   this.storage2 = 0;
