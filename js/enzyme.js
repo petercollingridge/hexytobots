@@ -12,8 +12,8 @@ Enzyme.prototype.update = function() {
   // Rate determined by the neural net
   // Eznymes can only go in one direction, so rate must be positive
   // Rate limited so substrate1 won't become negative
-  if (this.value > 0) {
-    const rate = Math.min(this.value, this.cell[this.substrate1]);
+  if (this.activity > 0) {
+    const rate = Math.min(this.activity, this.cell[this.substrate1]);
     this.cell[this.substrate1] -= rate;
     this.cell[this.substrate2] += rate;
   }

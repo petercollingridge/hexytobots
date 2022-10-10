@@ -1,4 +1,4 @@
-const Cell = function(world, x, y, angle, matter, energy, storage) {
+const Cell = function(world, x, y, angle, sugar, energy, starch) {
   this.age = 0;
   this.x = x;
   this.y = y;
@@ -8,10 +8,10 @@ const Cell = function(world, x, y, angle, matter, energy, storage) {
 
   this.world = world;
   this.life = 100;
-  this.matter = matter;
+  this.sugar = sugar;
   this.energy = energy;
-  this.storage = storage;
-  this.storage2 = 0;
+  this.starch = starch;
+  this.starch2 = 0;
   this.child = 0;
 
   this.inputs = [
@@ -19,18 +19,18 @@ const Cell = function(world, x, y, angle, matter, energy, storage) {
     new Input(() => this.light),
     new Input(() => this.life / 100),
     new Input(() => this.energy / 10),
-    new Input(() => this.storage / 1000),
-    new Input(() => this.storage2 / 1000),
+    new Input(() => this.starch / 1000),
+    new Input(() => this.starch2 / 1000),
     new Input(() => this.child / 100),
   ];
 
   this.enzymes = [
     new Enzyme(this, 'energy', 'life'),
     new Enzyme(this, 'energy', 'child'),
-    new Enzyme(this, 'energy', 'storage'),
-    new Enzyme(this, 'storage', 'energy'),
-    new Enzyme(this, 'storage', 'storage2'),
-    new Enzyme(this, 'storage2', 'storage'),
+    new Enzyme(this, 'energy', 'starch'),
+    new Enzyme(this, 'starch', 'energy'),
+    new Enzyme(this, 'starch', 'starch2'),
+    new Enzyme(this, 'starch2', 'starch'),
   ];
 
   // Create n hidden nodes in the brain
@@ -62,11 +62,11 @@ Cell.prototype._getConnections = function() {
 }
 
 Cell.prototype.update = function(light) {
-  // Equilibrate matter with the world
+  // Equilibrate sugar with the world
   // TODO: across a pore
   const gridCell = this.world.getGridCell(this.x, this.y);
-  const delta = (this.matter - gridCell.amount) * 0.02;
-  this.matter -= delta;
+  const delta = (this.sugar - gridCell.amount) * 0.02;
+  this.sugar -= delta;
   gridCell.amount += delta;
 
   // The deeper the cell, the less light it sees
