@@ -1,0 +1,3 @@
+const CANVAS_WIDTH = 600;
+const CANVAS_HEIGHT = 400;
+const GRID_SIZE = 25;

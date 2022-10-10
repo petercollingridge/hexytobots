@@ -1,10 +1,12 @@
-const Cell = function(x, y, angle, matter, energy, storage) {
+const Cell = function(world, x, y, angle, matter, energy, storage) {
   this.age = 0;
   this.x = x;
   this.y = y;
   this.angle = angle;
+  this.size = 8;
   // this.genome = genome;
 
+  this.world = world;
   this.life = 100;
   this.matter = matter;
   this.energy = energy;
@@ -59,9 +61,10 @@ Cell.prototype._getConnections = function() {
   return connections;
 }
 
-Cell.prototype.update = function(world, light) {
+Cell.prototype.update = function(light) {
   // Equilibrate matter with the world
-  const gridCell = world.getGridCell(this.x, this.y);
+  // TODO: across a pore
+  const gridCell = this.world.getGridCell(this.x, this.y);
   const delta = (this.matter - gridCell.amount) * 0.02;
   this.matter -= delta;
   gridCell.amount += delta;
@@ -99,20 +102,32 @@ Cell.prototype.metabolism = function() {
 };
 
 Cell.prototype.move = function() {
-  this.x += (Math.random() - 0.5) * 5
-  this.y += (Math.random() - 0.5) * 5
-  this.angle += (Math.random() - 0.5) * 0.1
+  this.x += (Math.random() - 0.5) * 5;
+  this.y += (Math.random() - 0.5) * 5;
+  this.angle += (Math.random() - 0.5) * 0.1;
+
+  if (this.x - this.size < 0) {
+    this.x = this.size;
+  } else if (this.x + this.size > CANVAS_WIDTH) {
+    this.x = CANVAS_WIDTH - this.size;
+  }
+
+  if (this.y - this.size < 0) {
+    this.y = this.size;
+  } else if (this.y + this.size > CANVAS_HEIGHT) {
+    this.y = CANVAS_HEIGHT - this.size;
+  }
 };
 
 // Draw organism as a hexagon
-Cell.prototype.display = function(ctx, size) {
+Cell.prototype.display = function(ctx) {
   ctx.fillStyle = 'rgb(60, 100, 40)';
   ctx.beginPath();
   
   for (let i = 0; i < 6; i++) {
     const angle = this.angle + i * Math.PI / 3;
-    const x = this.x + size * Math.cos(angle);
-    const y = this.y + size * Math.sin(angle);
+    const x = this.x + this.size * Math.cos(angle);
+    const y = this.y + this.size * Math.sin(angle);
     if (i) {
       ctx.lineTo(x, y);
     } else {

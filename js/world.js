@@ -27,10 +27,8 @@ function getWorld(width, height, size, initialAmount = 0) {
     for (let x = 0; x < width; x++) {
       for (let y = 0; y < height; y++) {
         const value = grid[x][y].amount;
-        ctx.beginPath();
         ctx.fillStyle = `rgb(${120 + value}, 200, ${220 - value})`;
-        ctx.rect(x * size, y * size, size, size);
-        ctx.fill();
+        ctx.fillRect(x * size, y * size, size, size);
       }
     }
   }

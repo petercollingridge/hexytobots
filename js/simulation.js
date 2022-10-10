@@ -1,8 +1,3 @@
-const CANVAS_WIDTH = 600;
-const CANVAS_HEIGHT = 400;
-const GRID_SIZE = 25;
-const CELL_SIZE = 10;
-
 const Simulation = function(id) {
   const container = document.getElementById(id);
   if (!container) {
@@ -13,12 +8,12 @@ const Simulation = function(id) {
   this.createInterface(container);
 
   this.time = 0;
-  this.cells = [
-    new Cell(200, 100, 0.2, 0, 10, 100),
-    new Cell(250, 180, 0, 0, 10, 100),
-  ];
-
   this.world = getWorld(CANVAS_WIDTH / GRID_SIZE, CANVAS_HEIGHT / GRID_SIZE, GRID_SIZE);
+
+  this.cells = [
+    new Cell(this.world, 200, 100, 0.2, 0, 10, 100),
+    new Cell(this.world, 250, 180, 0, 0, 10, 100),
+  ];
 };
 
 Simulation.prototype.createInterface = function(container) {
@@ -52,7 +47,7 @@ Simulation.prototype.update = function() {
   this.world.diffusion();
 
   const light = this.getLight();
-  callForEach(this.cells, 'update', this.world, light);
+  callForEach(this.cells, 'update', light);
 };
 
 // Calculate the light intensity based on the day/night cycle
@@ -63,7 +58,7 @@ Simulation.prototype.getLight = function() {
 Simulation.prototype.display = function() {
   this.ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   this.world.display(this.ctx);
-  callForEach(this.cells, 'display', this.ctx, CELL_SIZE);
+  callForEach(this.cells, 'display', this.ctx);
 };
 
 Simulation.prototype.setTimeout = function() {
