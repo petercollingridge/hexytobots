@@ -89,10 +89,10 @@ Cell.prototype.think = function() {
   // Connections transmit signals between nodes
   callForEach(this.connections, 'update');
 
-  // Update neural net node values
-  callForEach(this.inputs, 'updateValue');
-  callForEach(this.hiddenNodes, 'updateValue');
-  callForEach(this.enzymes, 'updateValue');
+  // Update neural net node activity values
+  callForEach(this.inputs, 'updateActivity');
+  callForEach(this.hiddenNodes, 'updateActivity');
+  callForEach(this.enzymes, 'updateActivity');
 }
 
 Cell.prototype.metabolism = function() {
