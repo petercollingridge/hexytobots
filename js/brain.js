@@ -20,6 +20,8 @@ Input.prototype.updateActivity = function() {
   return this.activity;
 };
 
+// Connection between two nodes.
+// The activity of the first will be transmitted to the second with the given weight
 const Connection = function(node1, node2, weight) {
   this.node1 = node1;
   this.node2 = node2;

@@ -14,6 +14,7 @@ const Cell = function(world, x, y, angle, sugar, energy, starch) {
   this.starch2 = 0;
   this.child = 0;
 
+  // Receptors which feed into the neural net
   this.inputs = [
     new Input(() => 1),
     new Input(() => this.light),
@@ -25,12 +26,12 @@ const Cell = function(world, x, y, angle, sugar, energy, starch) {
   ];
 
   this.enzymes = [
-    new Enzyme(this, 'energy', 'life'),
-    new Enzyme(this, 'energy', 'child'),
-    new Enzyme(this, 'energy', 'starch'),
-    new Enzyme(this, 'starch', 'energy'),
-    new Enzyme(this, 'starch', 'starch2'),
-    new Enzyme(this, 'starch2', 'starch'),
+    new LifeEnzyme(this),
+    new ChildEnzyme(this),
+    new AnabolismEnzyme(this),
+    new CatabolismEnzyme(this),
+    new GiveToChildEnzyme(this),
+    new TakeFromChildEnzyme(this),
   ];
 
   // Create n hidden nodes in the brain
@@ -62,13 +63,6 @@ Cell.prototype._getConnections = function() {
 }
 
 Cell.prototype.update = function(light) {
-  // Equilibrate sugar with the world
-  // TODO: across a pore
-  const gridCell = this.world.getGridCell(this.x, this.y);
-  const delta = (this.sugar - gridCell.amount) * 0.02;
-  this.sugar -= delta;
-  gridCell.amount += delta;
-
   // The deeper the cell, the less light it sees
   // Light falls off with a squared relationship
   const depth = this.y / 400;
@@ -77,12 +71,26 @@ Cell.prototype.update = function(light) {
   // Gain enegy through photosynthesis
   this.energy = Math.min(10, this.energy + this.light);
 
-  // Life slowly lost through degeneration
-  this.life -= 0.1;
-
+  this.absorbSugar();
   this.think();
   this.metabolism();
   this.move();
+};
+
+Cell.prototype.absorbSugar = function() {
+  // Equilibrate sugar with the world
+  // TODO: across a pore
+  const gridCell = this.world.getGridCell(this.x, this.y);
+  const delta = (gridCell.amount - this.sugar) * 0.02;
+  
+  this.sugar += delta;
+  if (this.sugar > MAX_SUGAR) {
+    // Limit delta so only enough sugar to fill the cell is brought it
+    delta -= this.sugar - MAX_SUGAR;
+    this.sugar = MAX_SUGAR;
+  }
+
+  gridCell.amount -= delta;
 };
 
 Cell.prototype.think = function() {
@@ -96,9 +104,19 @@ Cell.prototype.think = function() {
 }
 
 Cell.prototype.metabolism = function() {
+  // Life slowly lost through degeneration
+  this.life -= 0.1;
+  this.sugar += 0.1;
+
+  // Enzyme rates are equal to their activity, but only when > 1
+  this.enzymes.forEach((enzyme) => {
+    enzyme.rate = Math.max(0, enzyme.activity);
+  });
+
   callForEach(this.enzymes, 'update');
-  // console.log('energy', this.energy);
-  // console.log('life', this.life);
+  console.log('life', this.life);
+
+  this.energy = Math.min(this.energy, MAX_ENERGY);
 };
 
 Cell.prototype.move = function() {
