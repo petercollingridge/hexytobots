@@ -17,7 +17,6 @@ const Input = function(getActivity) {
 
 Input.prototype.updateActivity = function() {
   this.activity = this.getActivity();
-  return this.activity;
 };
 
 // Connection between two nodes.

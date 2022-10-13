@@ -81,7 +81,7 @@ Cell.prototype.absorbSugar = function() {
   // Equilibrate sugar with the world
   // TODO: across a pore
   const gridCell = this.world.getGridCell(this.x, this.y);
-  const delta = (gridCell.amount - this.sugar) * 0.02;
+  let delta = (gridCell.amount - this.sugar) * 0.02;
   
   this.sugar += delta;
   if (this.sugar > MAX_SUGAR) {
@@ -113,8 +113,20 @@ Cell.prototype.metabolism = function() {
     enzyme.rate = Math.max(0, enzyme.activity);
   });
 
+  callForEach(this.enzymes, 'limit');
+
+  // Make sure we don't use up more energy or sugar than we have
+  const totalEnergyCost = this.enzymes[0].activity + this.enzymes[1].activity + this.enzymes[2].activity;
+  const limitedAmount = Math.min(totalEnergyCost, this.energy, this.sugar);
+
+  if (limitedAmount < totalEnergyCost) {
+    const limitingRatio = limitedAmount / totalEnergyCost;
+    this.enzymes[0].activity *= limitingRatio;
+    this.enzymes[1].activity *= limitingRatio;
+    this.enzymes[2].activity *= limitingRatio;
+  }
+
   callForEach(this.enzymes, 'update');
-  console.log('life', this.life);
 
   this.energy = Math.min(this.energy, MAX_ENERGY);
 };
