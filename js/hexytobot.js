@@ -3,11 +3,11 @@ const Cell = function(world, x, y, angle, sugar, energy, starch) {
   this.x = x;
   this.y = y;
   this.angle = angle;
-  this.size = 8;
+  this.r = 8;
   // this.genome = genome;
 
   this.world = world;
-  this.life = 100;
+  this.life = MAX_LIFE;
   this.sugar = sugar;
   this.energy = energy;
   this.starch = starch;
@@ -18,11 +18,11 @@ const Cell = function(world, x, y, angle, sugar, energy, starch) {
   this.inputs = [
     new Input(() => 1),
     new Input(() => this.light),
-    new Input(() => this.life / 100),
-    new Input(() => this.energy / 10),
-    new Input(() => this.starch / 1000),
-    new Input(() => this.starch2 / 1000),
-    new Input(() => this.child / 100),
+    new Input(() => this.life / MAX_LIFE),
+    new Input(() => this.sugar / MAX_SUGAR),
+    new Input(() => this.starch / MAX_STARCH),
+    new Input(() => this.starch2 / MAX_STARCH),
+    new Input(() => this.child / MAX_LIFE),
   ];
 
   this.enzymes = [
@@ -42,6 +42,17 @@ const Cell = function(world, x, y, angle, sugar, energy, starch) {
   
   this.connections = this._getConnections();
 };
+
+Cell.prototype.info = function() {
+  return {
+    Life: this.life,
+    Energy: this.energy,
+    Sugar: this.sugar,
+    Child: this.child,
+    Starch: this.starch,
+    'Child starch': this.starch2,
+  };
+}
 
 Cell.prototype._getConnections = function() {
   const inputs = this.inputs.concat(this.hiddenNodes);
@@ -69,7 +80,7 @@ Cell.prototype.update = function(light) {
   this.light = light * (1 - depth * depth * 0.5);
 
   // Gain enegy through photosynthesis
-  this.energy = Math.min(10, this.energy + this.light);
+  this.energy = Math.min(MAX_ENERGY, this.energy + this.light);
 
   this.absorbSugar();
   this.think();
@@ -136,16 +147,16 @@ Cell.prototype.move = function() {
   this.y += (Math.random() - 0.5) * 5;
   this.angle += (Math.random() - 0.5) * 0.1;
 
-  if (this.x - this.size < 0) {
-    this.x = this.size;
-  } else if (this.x + this.size > CANVAS_WIDTH) {
-    this.x = CANVAS_WIDTH - this.size;
+  if (this.x - this.r < 0) {
+    this.x = this.r;
+  } else if (this.x + this.r > CANVAS_WIDTH) {
+    this.x = CANVAS_WIDTH - this.r;
   }
 
-  if (this.y - this.size < 0) {
-    this.y = this.size;
-  } else if (this.y + this.size > CANVAS_HEIGHT) {
-    this.y = CANVAS_HEIGHT - this.size;
+  if (this.y - this.r < 0) {
+    this.y = this.r;
+  } else if (this.y + this.r > CANVAS_HEIGHT) {
+    this.y = CANVAS_HEIGHT - this.r;
   }
 };
 
@@ -156,8 +167,8 @@ Cell.prototype.display = function(ctx) {
   
   for (let i = 0; i < 6; i++) {
     const angle = this.angle + i * Math.PI / 3;
-    const x = this.x + this.size * Math.cos(angle);
-    const y = this.y + this.size * Math.sin(angle);
+    const x = this.x + this.r * Math.cos(angle);
+    const y = this.y + this.r * Math.sin(angle);
     if (i) {
       ctx.lineTo(x, y);
     } else {

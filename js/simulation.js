@@ -6,7 +6,9 @@ const Simulation = function(id) {
   }
 
   this.createInterface(container);
-
+  this.toolbar = getToolbar(container);
+  this.infobox = getInfobox(this.controls);
+  
   this.time = 0;
   this.world = getWorld(CANVAS_WIDTH / GRID_SIZE, CANVAS_HEIGHT / GRID_SIZE, GRID_SIZE);
 
@@ -22,13 +24,13 @@ Simulation.prototype.createInterface = function(container) {
   // Play / Pause button
   const runButton = this.controls.addElement('button').text('Run');
   runButton.addEventListener('click', () => {
-      if (!this.animation) {
-          runButton.text('Pause');
-          this.run();
-      } else {
-          runButton.text('Run');
-          this.stop();
-      }
+    if (!this.animation) {
+      runButton.text('Pause');
+      this.run();
+    } else {
+      runButton.text('Run');
+      this.stop();
+    }
   });
 
   const canvas = createElement('canvas')
@@ -36,6 +38,17 @@ Simulation.prototype.createInterface = function(container) {
       width: CANVAS_WIDTH,
       height: CANVAS_HEIGHT
     })
+    .addEventListener('mouseup', (evt) => {
+      // Get the coordinates in the world where user clicked
+      const x = evt.offsetX;
+      const y = evt.offsetY;
+
+      this.selectedCell = this.findCellAtCoord(x, y);
+      // Trigger an update even if the display is not updating
+      if (this.selectedCell) {
+          this.infobox.update(this.selectedCell);
+      }
+  })
     .addClass('sim-canvas')
     .addTo(container);
 
@@ -59,6 +72,8 @@ Simulation.prototype.display = function() {
   this.ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
   this.world.display(this.ctx);
   callForEach(this.cells, 'display', this.ctx);
+  this.infobox.update(this.selectedCell);
+  this.toolbar.update(this);
 };
 
 Simulation.prototype.setTimeout = function() {
@@ -79,6 +94,24 @@ Simulation.prototype.stop = function() {
   clearTimeout(this.animation);
   this.animation = false;
 };
+
+Simulation.prototype.findCellAtCoord = function(x, y) {
+  let selectedCell;
+
+  for (let i = 0; i < this.cells.length; i++) {
+    const cell = this.cells[i];
+    const dx = cell.x - x;
+    const dy = cell.y - y;
+
+    const r = cell.r;
+    if (dx * dx + dy * dy < r * r) {
+      selectedCell = cell;
+      break;
+    }
+  }
+
+  return selectedCell;
+}
 
 const sim = new Simulation('sim');
 sim.run();

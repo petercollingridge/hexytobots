@@ -27,6 +27,10 @@ const LifeEnzyme = function(cell) {
 }
 LifeEnzyme.prototype = Object.create(Enzyme.prototype);
 
+LifeEnzyme.prototype.limit = function() {
+  this.activity = Math.min(this.activity, MAX_LIFE - this.cell.life);
+};
+
 const ChildEnzyme = function(cell) {
   Enzyme.call(this, cell, ['sugar', 'energy'], ['child']);
   this.name = 'Child enzyme';
@@ -52,7 +56,7 @@ CatabolismEnzyme.prototype = Object.create(Enzyme.prototype);
 
 // Limit starch breakdown if the cell is full of sugar
 CatabolismEnzyme.prototype.limit = function() {
-  this.activity = Math.min(this.activity, MAX_SUGAR - this.cell.sugar);
+  this.activity = Math.min(this.activity, this.cell.starch, MAX_SUGAR - this.cell.sugar);
 };
 
 const GiveToChildEnzyme = function(cell) {
@@ -61,8 +65,16 @@ const GiveToChildEnzyme = function(cell) {
 }
 GiveToChildEnzyme.prototype = Object.create(Enzyme.prototype);
 
+GiveToChildEnzyme.prototype.limit = function() {
+  this.activity = Math.min(this.activity, this.cell.starch);
+};
+
 const TakeFromChildEnzyme = function(cell) {
   Enzyme.call(this, cell, ['starch2'], ['starch']);
   this.name = 'Take from child enzyme';
 }
 TakeFromChildEnzyme.prototype = Object.create(Enzyme.prototype);
+
+TakeFromChildEnzyme.prototype.limit = function() {
+  this.activity = Math.min(this.activity, this.cell.starch2);
+};

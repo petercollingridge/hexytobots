@@ -1,12 +1,25 @@
 #sim {
   display: grid;
-  width: 750px;
-  grid-template-columns: 150px 600px;
+  width: 800px;
+  grid-template-columns: 200px 600px;
   grid-template-rows: auto auto;
   grid-template-areas: 
   "header header"
   "sidebar main";
   border: 1px solid #ddd;
+}
+
+.toolbar {
+  grid-area: header;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+}
+
+.toolbar-item {
+  padding: 3px 10px 1px 6px;
+  color: #345;
+  font-family: Arial;
+  font-size: 15px;
 }
 
 .sidebar {
@@ -20,4 +33,11 @@
 
 .sim-canvas {
   grid-area: main;
+}
+
+.infobox {
+  font-size: 90%;
+  min-height: 4rem;
+  margin-top: 1rem;
+  line-height: 1.4rem;
 }
