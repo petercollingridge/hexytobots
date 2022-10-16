@@ -10,6 +10,7 @@ const Simulation = function(id) {
   this.infobox = getInfobox(this.controls);
   
   this.time = 0;
+  this.light = this.getLight();
   this.world = getWorld(CANVAS_WIDTH / GRID_SIZE, CANVAS_HEIGHT / GRID_SIZE, GRID_SIZE);
 
   this.cells = [
@@ -59,13 +60,13 @@ Simulation.prototype.update = function() {
   this.time++;
   this.world.diffusion();
 
-  const light = this.getLight();
-  callForEach(this.cells, 'update', light);
+  this.light = this.getLight();
+  callForEach(this.cells, 'update', this.light);
 };
 
 // Calculate the light intensity based on the day/night cycle
 Simulation.prototype.getLight = function() {
-  return Math.max(0, Math.sin(this.time * 2 * Math.PI / 1000) + 0.2) / 1.2;
+  return Math.max(0, Math.sin(this.time * Math.PI * 0.001) + 0.2) / 1.2;
 }
 
 Simulation.prototype.display = function() {

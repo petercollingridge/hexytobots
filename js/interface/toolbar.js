@@ -16,6 +16,7 @@ function getToolbarItem(toolbarElement, itemName, getValue) {
 function getToolbar(container) {
   const defaultItems = {
     Time: sim => sim.time.toLocaleString(),
+    Light: sim => sim.light.toFixed(3),
     Cells: sim => sim.cells.length,
   };
 
