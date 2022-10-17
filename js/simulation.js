@@ -62,6 +62,17 @@ Simulation.prototype.update = function() {
 
   this.light = this.getLight();
   callForEach(this.cells, 'update', this.light);
+
+  // Remove dead cells
+  for (let i = this.cells.length; i--;) {
+    if (this.cells[i].dead) {
+      const cell = this.cells[i];
+      const gridCell = this.world.getGridCell(cell.x, cell.y);
+      // All the cell's matter is returned to the world
+      gridCell.amount += cell.sugar + cell.child + cell.starch + cell.starch2;
+      this.cells.splice(i, 1);
+    }
+  }
 };
 
 // Calculate the light intensity based on the day/night cycle

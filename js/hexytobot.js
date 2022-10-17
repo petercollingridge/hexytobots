@@ -86,6 +86,10 @@ Cell.prototype.update = function(light) {
   this.think();
   this.metabolism();
   this.move();
+
+  if (this.life <= 0) {
+    this.dead = true;
+  }
 };
 
 Cell.prototype.absorbSugar = function() {
