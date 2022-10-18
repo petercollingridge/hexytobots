@@ -61,7 +61,7 @@ Simulation.prototype.update = function() {
   this.world.diffusion();
 
   this.light = this.getLight();
-  callForEach(this.cells, 'update', this.light);
+  callForEach(this.cells, 'update', this);
 
   // Remove dead cells
   for (let i = this.cells.length; i--;) {
@@ -106,6 +106,12 @@ Simulation.prototype.stop = function() {
   clearTimeout(this.animation);
   this.animation = false;
 };
+
+Simulation.prototype.addCell = function(x, y, angle, sugar, energy, starch) { 
+  this.cells.push(
+    new Cell(this.world , x, y, angle, sugar, energy, starch)
+  );
+}
 
 Simulation.prototype.findCellAtCoord = function(x, y) {
   let selectedCell;

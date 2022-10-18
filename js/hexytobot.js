@@ -73,11 +73,11 @@ Cell.prototype._getConnections = function() {
   return connections;
 }
 
-Cell.prototype.update = function(light) {
+Cell.prototype.update = function(sim) {
   // The deeper the cell, the less light it sees
   // Light falls off with a squared relationship
   const depth = this.y / 400;
-  this.light = light * (1 - depth * depth * 0.5);
+  this.light = sim.light; // * (1 - depth * depth * 0.5);
 
   // Gain enegy through photosynthesis
   this.energy = Math.min(MAX_ENERGY, this.energy + this.light);
@@ -89,6 +89,8 @@ Cell.prototype.update = function(light) {
 
   if (this.life <= 0) {
     this.dead = true;
+  } else if (this.child >= MAX_LIFE) {
+    this.reproduce(sim);
   }
 };
 
@@ -180,4 +182,10 @@ Cell.prototype.display = function(ctx) {
     }
   }
   ctx.fill();
+};
+
+Cell.prototype.reproduce = function(sim) {
+  sim.addCell(this.x, this.y, this.angle + Math.PI, 0, 0, this.starch2);
+  this.child = 0;
+  this.starch2 = 0;
 };
