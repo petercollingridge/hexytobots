@@ -37,6 +37,10 @@ const ChildEnzyme = function(cell) {
 }
 ChildEnzyme.prototype = Object.create(Enzyme.prototype);
 
+ChildEnzyme.prototype.limit = function() {
+  this.activity = Math.min(this.activity, MAX_LIFE - this.cell.child);
+};
+
 const AnabolismEnzyme = function(cell) {
   Enzyme.call(this, cell, ['sugar', 'energy'], ['starch']);
   this.name = 'Anabolism enzyme';
