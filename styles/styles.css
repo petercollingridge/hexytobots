@@ -7,6 +7,7 @@
   "header header"
   "sidebar main";
   border: 1px solid #ddd;
+  font-family: Arial;
 }
 
 .toolbar {
@@ -18,7 +19,6 @@
 .toolbar-item {
   padding: 3px 10px 1px 6px;
   color: #345;
-  font-family: Arial;
   font-size: 15px;
 }
 
@@ -35,9 +35,30 @@
   grid-area: main;
 }
 
-.infobox {
+.info-box {
   font-size: 90%;
   min-height: 4rem;
   margin-top: 1rem;
-  line-height: 1.4rem;
+  color: #345;
+}
+
+.info-bar {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  height: 1.4rem;
+  padding-top: 2px;
+}
+
+.percent-bar {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  height: 1.3rem;
+  width: 50%;
+  background-color: rgb(180, 220, 255);
+}
+
+.info-bar .info-name {
+  padding-left: 2px;
 }

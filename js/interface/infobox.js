@@ -1,34 +1,45 @@
+const INFO_BARS = [
+  { name: 'Life', key: 'life', max: MAX_LIFE },
+  { name: 'Energy', key: 'energy', max: MAX_ENERGY },
+  { name: 'Sugar', key: 'sugar', max: MAX_SUGAR },
+  { name: 'Child', key: 'child', max: MAX_LIFE },
+  { name: 'Starch', key: 'starch', max: MAX_STARCH },
+  { name: 'Child starch', key: 'starch2', max: MAX_STARCH },
+];
+
 function getInfobox(container) {
   const infoBoxElement = createElement('div')
-    .addClass('infobox')
+    .addClass('info-box')
     .addTo(container);
 
-  let textNodes = [];
+  const textNodes = INFO_BARS.map((metric) => {
+    // Container
+    const infoBar = createElement('div')
+      .addClass('info-bar')
+      .addTo(infoBoxElement);
 
-  const clear = () => {
-    textNodes.forEach((box) => {
-      box.text('');
-    });
-  }
+    // Fill some percentage of the bar based on value
+    const percent = createElement('div').addClass('percent-bar').addTo(infoBar);
+
+    // Span containing name
+    createElement('span').addClass('info-name').addTo(infoBar).text(`${metric.name}:`);
+
+    // Span containing value
+    const value = createElement('span').addTo(infoBar);
+    return { percent, value };
+  });
 
   const obj = {
     element: infoBoxElement,
     update: (selectedCell) => {
       if (selectedCell) {
-        // Clear any current info
-        infoBoxElement.textContent = '';
+        INFO_BARS.map((metric, index) => {
+          const value = selectedCell[metric.key];
+          const percentage = Math.round(100 * value / metric.max);
 
-        const info = selectedCell.info();
-        Object.entries(info).map(([key, value], index) => {
-          let child = textNodes[index];
-
-          // Create child if it doesn't exist
-          if (!child) {
-            child = createElement('div').addTo(infoBoxElement);
-          }
-          textNodes.push(child);
-          
-          child.text(`${key}: ${Math.round(value * 1e3) / 1e3}`)
+          const node = textNodes[index];
+          node.value.text(Math.round(value * 1e3) / 1e3);
+          node.percent.css({ width: `${percentage}%` });
         })
       }
     }
