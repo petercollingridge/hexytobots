@@ -10,6 +10,7 @@ const Simulation = function(id) {
   this.infobox = getInfobox(this.controls);
   
   this.time = 0;
+  this.speed = 5;
   this.light = this.getLight();
   this.world = getWorld(CANVAS_WIDTH / GRID_SIZE, CANVAS_HEIGHT / GRID_SIZE, GRID_SIZE);
 
@@ -32,6 +33,12 @@ Simulation.prototype.createInterface = function(container) {
       runButton.text('Run');
       this.stop();
     }
+  });
+
+  const stepButton = this.controls.addElement('button').text('Step');
+  stepButton.addEventListener('click', () => {
+    this.update();
+    this.display();
   });
 
   const canvas = createElement('canvas')
@@ -89,7 +96,7 @@ Simulation.prototype.display = function() {
 };
 
 Simulation.prototype.setTimeout = function() {
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < this.speed; i++) {
     this.update();
   }
   this.display();
