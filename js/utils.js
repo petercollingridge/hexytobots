@@ -1,5 +1,10 @@
-function createElement(tag) {
-  const element = document.createElement(tag);
+function createElement(tag, svg) {
+  let element;
+  if (svg) {
+    element = document.createElementNS('http://www.w3.org/2000/svg', tag);
+  } else {
+    element = document.createElement(tag);
+  }
 
   const obj = {
       element,
@@ -21,9 +26,13 @@ function createElement(tag) {
           element.addEventListener(type, func);
           return obj;
       },
-      text: (text) => {
-          element.innerHTML = text;
-          return obj;
+      addTo: (parent) => {
+        parent.appendChild(element);
+        return obj;
+      },
+      appendChild: (child) => {
+        element.appendChild(child);
+        return obj;
       },
       css: (styles) => {
           let cssString = ''
@@ -33,14 +42,14 @@ function createElement(tag) {
           element.style.cssText = cssString;
           return obj;
       },
-      addTo: (parent) => {
-          parent.appendChild(element);
-          return obj;
+      empty: () => {
+        element.innerHTML = '';
+        return obj;
       },
-      appendChild: (child) => {
-          element.appendChild(child);
-          return obj;
-      }
+      text: (text) => {
+        element.innerHTML = text;
+        return obj;
+    },
   };
 
   return obj;
@@ -48,6 +57,7 @@ function createElement(tag) {
 
 const sigmoid = (n) => 1 / (1 + Math.exp(-n));
 
+// Loop through an array of object, calling a function method on each item with the given name 
 const callForEach = (arr, func, ...args) => arr.forEach((item) => item[func](...args));
 
 const randomN = (n) => Math.floor(n * Math.random());
