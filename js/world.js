@@ -6,7 +6,7 @@ function getWorld(width, height, size, initialAmount = 0) {
   for (let x = 0; x < width; x++) {
     const col = [];
     for (let y = 0; y < height; y++) {
-      col.push({ amount:randomN(100), delta: 0 });
+      col.push({ amount:randInt(100), delta: 0 });
     }
     grid.push(col);
   }

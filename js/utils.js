@@ -60,4 +60,8 @@ const sigmoid = (n) => 1 / (1 + Math.exp(-n));
 // Loop through an array of object, calling a function method on each item with the given name 
 const callForEach = (arr, func, ...args) => arr.forEach((item) => item[func](...args));
 
-const randomN = (n) => Math.floor(n * Math.random());
+// Random integer between 0 and less than n
+const randInt = (n) => Math.floor(n * Math.random());
+
+// Random integer between a and less than b
+const randRange = (a, b) => Math.floor((b - a) * Math.random()) + a;

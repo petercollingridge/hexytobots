@@ -39,7 +39,7 @@ const Cell = function(world, x, y, angle, sugar, energy, starch) {
   for (let i = 0; i < 4; i++) {
     this.hiddenNodes.push(new NeuralNetNode());
   }
-  
+
   this.connections = this._getConnections();
 };
 
@@ -55,19 +55,23 @@ Cell.prototype.info = function() {
 }
 
 Cell.prototype._getConnections = function() {
-  const inputs = this.inputs.concat(this.hiddenNodes);
-  const outputs = this.enzymes.concat(this.hiddenNodes);
+  this.nodes = this.inputs.concat(this.hiddenNodes).concat(this.enzymes);
 
   // Create random connections
-  const n = randomN(6) + 6;
-  const nInputs = inputs.length;
-  const nOutputs = outputs.length;
+  const n = randRange(6, 12);
+  const nNodes = this.nodes.length;
+  const skipInputs = this.inputs.length;
+  const skipOutputs = nNodes - this.enzymes.length;
   
   const connections = [];
   for (let i = 0; i < n; i++) {
-    const input = inputs[randomN(nInputs)]
-    const output = outputs[randomN(nOutputs)]
-    connections.push(new Connection(input, output, Math.random()));
+    const n1 = randRange(0, skipOutputs);
+    const n2 = randRange(skipInputs, nNodes);
+    const input = this.nodes[n1];
+    const output = this.nodes[n2];
+    const connection = new Connection(input, output, Math.random());
+    connection.id = [n1, n2];
+    connections.push(connection);
   }
   
   return connections;

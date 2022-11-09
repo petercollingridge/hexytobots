@@ -62,3 +62,7 @@
 .info-bar .info-name {
   padding-left: 2px;
 }
+
+.neural-net-node {
+  fill: #aaa;
+}

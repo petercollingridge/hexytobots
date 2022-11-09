@@ -3,11 +3,11 @@
 function drawLineOfNodes(cx, nodes, height, r, svg) {
   let dy = height / (nodes.length + 1);
   for (let i = 0; i < nodes.length; i++) {
-    createElement('circle', true).attr({
-      r,
-      cx,
-      cy: (i + 1) * dy,
-    }).addTo(svg);
+    const cy = (i + 1) * dy;
+    createElement('circle', true)
+      .attr({ r, cx, cy })
+      .addClass('neural-net-node')
+      .addTo(svg);
   }
 }
 
