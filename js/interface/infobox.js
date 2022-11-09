@@ -7,7 +7,7 @@ const INFO_BARS = [
   { name: 'Child starch', key: 'starch2', max: MAX_STARCH },
 ];
 
-function getInfobox(container) {
+function getMetaboliteInfo(container) {
   const infoBoxElement = createElement('div')
     .addClass('info-box')
     .addTo(container);
@@ -29,6 +29,8 @@ function getInfobox(container) {
     return { percent, value };
   });
 
+  const neuralNetMap = createElement('div').addTo(container);
+
   const obj = {
     element: infoBoxElement,
     update: (selectedCell) => {
@@ -40,6 +42,11 @@ function getInfobox(container) {
           const node = textNodes[index];
           node.value.text(Math.round(value * 1e3) / 1e3);
           node.percent.css({ width: `${percentage}%` });
+
+          const svg = drawNNMap(selectedCell);
+          console.log(svg);
+          neuralNetMap.empty();
+          svg.addTo(neuralNetMap);
         })
       }
     }

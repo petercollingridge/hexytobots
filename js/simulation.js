@@ -7,7 +7,7 @@ const Simulation = function(id) {
 
   this.createInterface(container);
   this.toolbar = getToolbar(container);
-  this.infobox = getInfobox(this.controls);
+  this.infobox = getMetaboliteInfo(this.controls);
   
   this.time = 0;
   this.speed = 5;
