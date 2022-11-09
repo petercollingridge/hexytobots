@@ -44,7 +44,6 @@ function getMetaboliteInfo(container) {
           node.percent.css({ width: `${percentage}%` });
 
           const svg = drawNNMap(selectedCell);
-          console.log(svg);
           neuralNetMap.empty();
           svg.addTo(neuralNetMap);
         })
